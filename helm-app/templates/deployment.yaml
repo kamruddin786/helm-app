@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: helm-app
+  template:
+    metadata:
+      labels:
+        app: helm-app
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:latest
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h helm-app-db -p {{ .Values.database.port }} -U {{ .Values.database.username }}; do
+                echo "Waiting for PostgreSQL to be ready...";
+                sleep 5;
+              done
+          env:
+            - name: PGUSER
+              value: {{ .Values.database.username }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+      containers:
+        - name: app
+          image: {{ .Values.app.image }}:{{ .Values.app.tag }}
+          ports:
+              - containerPort: {{ .Values.app.port }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://helm-app-db:{{ .Values.database.port }}/{{ .Values.database.name }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password

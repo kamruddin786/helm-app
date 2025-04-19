@@ -1,0 +1,14 @@
+app:
+  image: kamruddin/helm-app
+  tag: latest
+  port: 9090
+
+database:
+  image: postgres
+  tag: latest
+  username: myuser
+  password: mypassword
+  name: mydb
+  port: 5432
+
+replicaCount: 1
