@@ -52,3 +52,9 @@ The Helm chart can be configured using the `values.yaml` file. This file contain
 
 ```shell
 helm install my-app . -f custom-values.yaml
+```
+
+## ConfigMap
+We are not using configMap in this project. But if you want to use uncomment the configMap.yaml file and add the required properties in the configMap.yaml file. 
+Then you can use it in your application by using @Value annotation.
+
