@@ -30,6 +30,12 @@ To deploy the application using Helm, follow these steps:
 
     This command will deploy the application to your Kubernetes cluster.
 
+3. **Remove the deployment:**
+
+    ```shell
+    helm delete <app_name>
+    ```
+
 ## Why Separate Database Service?
 
 In this setup, the PostgreSQL database is deployed as a separate service for several reasons:
