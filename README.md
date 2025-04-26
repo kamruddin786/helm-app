@@ -80,3 +80,38 @@ helm install my-app . -f custom-values.yaml
 We are not using configMap in this project. But if you want to use uncomment the configMap.yaml file and add the required properties in the configMap.yaml file. 
 Then you can use it in your application by using @Value annotation.
 
+## Local deployment
+
+### Using Minikube
+For a local Kubernetes cluster running on Minikube, you can use the following command to access the application:
+```shell
+   minikube service <service-name> --url
+```
+Use the displayed URL to access the application.
+
+### Using Docker Desktop
+If you are using Docker Desktop, you need to create a NodePort service to access the application.
+```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: helm-app-service
+     labels:
+       app: helm-app
+   spec:
+     type: NodePort
+     selector:
+       app: helm-app
+     ports:
+       - port: 9090       # The port your application listens on, refer to your application.properties
+         targetPort: 9090 # The container port, refer to your values.yaml
+         nodePort: 30007  # The NodePort to expose (must be in the range 30000-32767)
+  ```
+
+Save this configuration in a file (e.g., nodeport-service.yaml) and apply it using:
+```shell
+   kubectl apply -f nodeport-service.yaml
+```
+This will create a NodePort service that exposes your application on port 30007.
+You can then access your application using http://<localhost>:30007.
+
