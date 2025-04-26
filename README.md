@@ -14,14 +14,36 @@ This is a Spring Boot application that uses PostgreSQL as its database. It is de
 
 To deploy the application using Helm, follow these steps:
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
 
     ```shell
     git clone <repository-url>
     cd helm-app
     ```
 
-2.  **Install the Helm chart:**
+2. **Build and Push Docker Image to Docker Hub:**
+
+    Replace `<docker-hub-username>` and `<image-name>` with your Docker Hub username and preferred image name.
+
+    ```shell
+    # Build the Docker image
+    docker build -t <docker-hub-username>/<image-name>:<tag> .
+
+    # Push the Docker image to Docker Hub
+    docker push <docker-hub-username>/<image-name>:<tag>
+    ```
+
+3. **Update Docker Image in Helm Values:**
+
+    Edit the `values.yaml` file in your Helm chart to update the Docker image with the new image name and tag:
+
+    ```yaml
+    image:
+      repository: <docker-hub-username>/<image-name>
+      tag: <tag>
+    ```
+
+4. **Install the Helm chart:**
 
     ```shell
     helm install <app_name> ./<dir_containing_helm_chart>
@@ -30,7 +52,7 @@ To deploy the application using Helm, follow these steps:
 
     This command will deploy the application to your Kubernetes cluster.
 
-3. **Remove the deployment:**
+5. **Remove the deployment:**
 
     ```shell
     helm delete <app_name>
