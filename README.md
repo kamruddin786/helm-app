@@ -113,5 +113,5 @@ Save this configuration in a file (e.g., nodeport-service.yaml) and apply it usi
    kubectl apply -f nodeport-service.yaml
 ```
 This will create a NodePort service that exposes your application on port 30007.
-You can then access your application using http://<local-host>:30007.
+You can then access your application at localhost or 127.0.0.1 with port 30007
 
